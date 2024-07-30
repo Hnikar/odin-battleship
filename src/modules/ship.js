@@ -4,6 +4,7 @@ export default class Ship {
     this.hitCount = 0;
   }
   hit() {
+    //expand later
     this.hitCount++;
     if (this.hitCount === this.length) {
       this.isSunk = true;
