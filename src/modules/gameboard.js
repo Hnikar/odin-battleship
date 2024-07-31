@@ -1,6 +1,6 @@
 export default class Gameboard {
   constructor() {
-    this.board = Array.from({ length: 10 }, () => Array(10).fill(false));
+    this.board = [];
     this.ships = [];
     this.missedAttacks = [];
   }
