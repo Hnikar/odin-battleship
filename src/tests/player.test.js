@@ -5,9 +5,19 @@ describe("Player", () => {
     const player = new Player(false, "John");
     expect(player).toBeInstanceOf(Player);
   });
-  test("should create a player", () => {
+  test("should create a CPU player", () => {
     const player = new Player(true);
     expect(player.name).toBe("CPU");
+  });
+  test("should have a non empty name", () => {
+    expect(() => new Player(false, "")).toThrow(
+      "The name of the player is too long"
+    );
+  });
+  test("should have a name of maximum 10 characters", () => {
+    expect(() => new Player(false, "JohnDoe123456789")).toThrow(
+      "The name of the player is too long"
+    );
   });
   test("should create a gameboard", () => {
     const player = new Player(false, "John");
