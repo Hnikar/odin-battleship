@@ -10,13 +10,11 @@ describe("Player", () => {
     expect(player.name).toBe("CPU");
   });
   test("should have a non empty name", () => {
-    expect(() => new Player(false, "")).toThrow(
-      "The name of the player is too long"
-    );
+    expect(() => new Player(false, "")).toThrow("Invalid player name");
   });
   test("should have a name of maximum 10 characters", () => {
     expect(() => new Player(false, "JohnDoe123456789")).toThrow(
-      "The name of the player is too long"
+      "Invalid player name"
     );
   });
   test("should create a gameboard", () => {

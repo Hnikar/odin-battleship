@@ -2,14 +2,16 @@ import Gameboard from "./gameboard";
 export default class Player {
   constructor(cpu, name) {
     this.cpu = cpu;
-    this.name =
-      cpu === true
-        ? "CPU"
-        : name.length > 10 || name === ""
-        ? (() => {
-            throw new Error("The name of the player is too long");
-          })()
-        : name;
+    if (cpu === true) {
+      this.name = "CPU";
+    } else {
+      if (name.length > 10 || name === "") {
+        throw new Error("Invalid player name");
+      } else {
+        this.name = name;
+      }
+    }
+  
     this.gameBoard = new Gameboard();
   }
 }
