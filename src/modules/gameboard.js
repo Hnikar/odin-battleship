@@ -20,12 +20,10 @@ export default class Gameboard {
         y = Y + i;
       }
 
-      // Check if the ship goes out of bounds
       if (x >= 10 || y >= 10) {
         return false;
       }
 
-      // Check the surrounding cells for any other ships
       for (let dx = -1; dx <= 1; dx++) {
         for (let dy = -1; dy <= 1; dy++) {
           const nx = x + dx;
@@ -70,23 +68,21 @@ export default class Gameboard {
 
   receiveAttack([X, Y]) {
     if (this.board[X][Y] === 1) {
-      this.board[X][Y] = 3; // Mark as hit
+      this.board[X][Y] = 3;
 
-      // Find which ship was hit
       const ship = this.ships.find((ship) =>
         ship.coordinates.some((coord) => coord[0] === X && coord[1] === Y)
       );
 
       ship.hits += 1;
 
-      // Check if the ship is completely destroyed
       if (ship.hits === ship.ship.length) {
         this.markSurroundingCells(ship.coordinates);
       }
 
       return true;
     } else if (this.board[X][Y] === 0) {
-      this.board[X][Y] = 2; // Mark as missed
+      this.board[X][Y] = 2;
       this.missedAttacks.push([X, Y]);
       return false;
     }
@@ -101,7 +97,7 @@ export default class Gameboard {
 
           if (nx >= 0 && nx < 10 && ny >= 0 && ny < 10) {
             if (this.board[nx][ny] === 0) {
-              this.board[nx][ny] = 2; // Mark as missed
+              this.board[nx][ny] = 2; 
               this.missedAttacks.push([nx, ny]);
             }
           }

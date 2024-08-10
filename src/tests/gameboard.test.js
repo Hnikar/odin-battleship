@@ -61,8 +61,6 @@ describe("Gameboard", () => {
     expect(gameboard.areAllShipsSunk()).toBe(true);
   });
 
-  // New tests for the added functionality
-
   test("Gameboard should destroy the ship and mark surrounding cells as missed when all parts of the ship are hit", () => {
     let gameboard = new Gameboard();
     let ship = new Ship(2);
@@ -74,7 +72,6 @@ describe("Gameboard", () => {
     expect(gameboard.board[2][2]).toBe(3);
     expect(gameboard.board[3][2]).toBe(3);
 
-    // Check surrounding cells are marked as missed (2)
     expect(gameboard.board[1][1]).toBe(2);
     expect(gameboard.board[1][2]).toBe(2);
     expect(gameboard.board[1][3]).toBe(2);
@@ -100,7 +97,6 @@ describe("Gameboard", () => {
     expect(gameboard.board[5][6]).toBe(3);
     expect(gameboard.board[5][7]).toBe(3);
 
-    // Check surrounding cells are marked as missed (2)
     expect(gameboard.board[4][4]).toBe(2);
     expect(gameboard.board[4][5]).toBe(2);
     expect(gameboard.board[4][6]).toBe(2);
@@ -123,7 +119,6 @@ describe("Gameboard", () => {
     gameboard.receiveAttack([5, 5]);
     gameboard.receiveAttack([5, 6]);
 
-    // Ship is not fully destroyed yet, so surrounding cells should not be marked
     expect(gameboard.board[4][4]).toBe(0);
     expect(gameboard.board[6][7]).toBe(0);
   });
