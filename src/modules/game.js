@@ -9,20 +9,31 @@ const game = (() => {
   const init = () => {
     player = new Player(false, "Player");
     cpu = new Player(true);
-    placeShipsRandomly(player);
-    placeShipsRandomly(cpu);
 
+    placeShipsRandomly(player);
+    dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
+    dom.updateMessage("Reroll ships or click Play when ready!");
+
+    dom.enableRerollButton(true);
+    dom.enablePlayButton(true);
+    dom.enableBoardInteraction(false);
+  };
+
+  const startGame = () => {
     dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
     dom.renderBoard(cpu.gameBoard.board, dom.cpuBoardElement, true);
     dom.updateMessage("Click on the CPU board to attack!");
 
     currentPlayer = player;
+    dom.enableRerollButton(false);
+    dom.enablePlayButton(false);
     dom.enableBoardInteraction(true);
 
     dom.cpuBoardElement.addEventListener("click", handleAttack);
   };
 
   const placeShipsRandomly = (player) => {
+    player.gameBoard = new Gameboard();
     const ships = [
       new Ship(4),
       new Ship(3),
@@ -108,9 +119,8 @@ const game = (() => {
   };
 
   const resetGame = () => {
-    dom.playButton.addEventListener("click", init);
+    dom.playButton.addEventListener("click", startGame);
     dom.rerollButton.addEventListener("click", () => {
-      player.gameBoard = new Gameboard();
       placeShipsRandomly(player);
       dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
     });

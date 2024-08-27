@@ -1,46 +1,56 @@
 const dom = (() => {
-  const playerBoardElement = document.getElementById("player-board");
-  const cpuBoardElement = document.getElementById("cpu-board");
-  const messageElement = document.getElementById("message");
-  const playButton = document.getElementById("play-button");
-  const rerollButton = document.getElementById("reroll-button");
+  const playerBoardElement = document.querySelector("#player-board");
+  const cpuBoardElement = document.querySelector("#cpu-board");
+  const playButton = document.querySelector("#play-button");
+  const rerollButton = document.querySelector("#reroll-button");
+  const messageElement = document.querySelector("#message");
 
-  const renderBoard = (board, boardElement, isCPU = false) => {
-    boardElement.innerHTML = "";
-    board.forEach((row, i) => {
-      row.forEach((cell, j) => {
+  const renderBoard = (board, element, hideShips = false) => {
+    element.innerHTML = "";
+    board.forEach((row, x) => {
+      row.forEach((cell, y) => {
         const cellElement = document.createElement("div");
+        cellElement.dataset.x = x;
+        cellElement.dataset.y = y;
         cellElement.classList.add("cell");
-        if (cell === 1 && !isCPU) {
+        if (cell === 1 && !hideShips) {
           cellElement.classList.add("ship");
         } else if (cell === 2) {
           cellElement.classList.add("miss");
         } else if (cell === 3) {
           cellElement.classList.add("hit");
         }
-        cellElement.dataset.x = i;
-        cellElement.dataset.y = j;
-        boardElement.appendChild(cellElement);
+        element.appendChild(cellElement);
       });
     });
   };
 
-  const updateMessage = (msg) => {
-    messageElement.textContent = msg;
+  const updateMessage = (message) => {
+    messageElement.textContent = message;
   };
 
-  const enableBoardInteraction = (enable) => {
-    cpuBoardElement.style.pointerEvents = enable ? "auto" : "none";
+  const enableRerollButton = (enabled) => {
+    rerollButton.disabled = !enabled;
+  };
+
+  const enablePlayButton = (enabled) => {
+    playButton.disabled = !enabled;
+  };
+
+  const enableBoardInteraction = (enabled) => {
+    cpuBoardElement.style.pointerEvents = enabled ? "auto" : "none";
   };
 
   return {
-    renderBoard,
-    updateMessage,
-    enableBoardInteraction,
     playerBoardElement,
     cpuBoardElement,
     playButton,
     rerollButton,
+    renderBoard,
+    updateMessage,
+    enableRerollButton,
+    enablePlayButton,
+    enableBoardInteraction,
   };
 })();
 
