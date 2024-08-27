@@ -1,5 +1,3 @@
-import Ship from "./ship";
-
 export default class Gameboard {
   constructor() {
     this.board = Array.from({ length: 10 }, () => Array(10).fill(0));
@@ -62,7 +60,6 @@ export default class Gameboard {
       }
     }
 
-    // Store the ship with its coordinates and its current hit status
     this.ships.push({ ship, coordinates: shipCoordinates, hits: 0 });
   }
 
@@ -97,7 +94,7 @@ export default class Gameboard {
 
           if (nx >= 0 && nx < 10 && ny >= 0 && ny < 10) {
             if (this.board[nx][ny] === 0) {
-              this.board[nx][ny] = 2; 
+              this.board[nx][ny] = 2;
               this.missedAttacks.push([nx, ny]);
             }
           }

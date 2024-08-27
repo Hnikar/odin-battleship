@@ -1,0 +1,42 @@
+@import url(reset.css);
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    grid-template-rows: repeat(10, 30px);
+    gap: 5px;
+    margin-bottom: 20px;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    background-color: lightblue;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.cell.ship {
+    background-color: gray;
+}
+
+.cell.hit {
+    background-color: red;
+}
+
+.cell.miss {
+    background-color: white;
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+#controls {
+    margin-bottom: 20px;
+}
