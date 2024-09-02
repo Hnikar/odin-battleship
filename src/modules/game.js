@@ -1,35 +1,87 @@
-import Gameboard from "./gameboard";
-import Player from "./player";
-import Ship from "./ship";
-import dom from "./dom";
+import Gameboard from "./gameboard.js";
+import Player from "./player.js";
+import Ship from "./ship.js";
+import dom from "./dom.js";
 
 const game = (() => {
   let player, cpu, currentPlayer;
+  let draggedShip = null;
+  let isHorizontal = true;
 
   const init = () => {
     player = new Player(false, "Player");
     cpu = new Player(true);
-
-    placeShipsRandomly(player);
+    player.gameBoard = new Gameboard();
+    cpu.gameBoard = new Gameboard();
+    placeShipsRandomly(cpu);
     dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
-    dom.updateMessage("Reroll ships or click Play when ready!");
-
+    dom.updateMessage("Drag and drop your ships onto the board!");
     dom.enableRerollButton(true);
-    dom.enablePlayButton(true);
+    dom.enablePlayButton(false);
     dom.enableBoardInteraction(false);
+    setupDragAndDrop();
   };
 
-  const startGame = () => {
-    dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
-    dom.renderBoard(cpu.gameBoard.board, dom.cpuBoardElement, true);
-    dom.updateMessage("Click on the CPU board to attack!");
+  const setupDragAndDrop = () => {
+    const ships = document.querySelectorAll(".ship");
+    const cells = dom.playerBoardElement.querySelectorAll(".cell");
 
-    currentPlayer = player;
-    dom.enableRerollButton(false);
-    dom.enablePlayButton(false);
-    dom.enableBoardInteraction(true);
+    ships.forEach((ship) => {
+      ship.addEventListener("dragstart", dragStart);
+      ship.addEventListener("dragend", dragEnd);
+    });
 
-    dom.cpuBoardElement.addEventListener("click", handleAttack);
+    cells.forEach((cell) => {
+      cell.addEventListener("dragover", dragOver);
+      cell.addEventListener("drop", drop);
+    });
+
+    dom.rotateButton.addEventListener("click", rotateShip);
+  };
+
+  const dragStart = (e) => {
+    draggedShip = e.target;
+    e.dataTransfer.setData("text/plain", e.target.id);
+  };
+
+  const dragEnd = () => {
+    draggedShip = null;
+  };
+
+  const dragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const drop = (e) => {
+    e.preventDefault();
+    const x = parseInt(e.target.dataset.x, 10);
+    const y = parseInt(e.target.dataset.y, 10);
+    const length = parseInt(draggedShip.dataset.shipLength, 10);
+
+    try {
+      const ship = new Ship(length);
+      player.gameBoard.placeShip(
+        ship,
+        [x, y],
+        isHorizontal ? "horizontal" : "vertical"
+      );
+      dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
+      draggedShip.remove();
+
+      if (document.querySelectorAll(".ship").length === 0) {
+        dom.enablePlayButton(true);
+        dom.updateMessage("All ships placed. Click Play when ready!");
+      }
+    } catch (error) {
+      dom.updateMessage("Can't place ship there. Try again.");
+    }
+  };
+
+  const rotateShip = () => {
+    isHorizontal = !isHorizontal;
+    dom.updateMessage(
+      `Ship orientation: ${isHorizontal ? "Horizontal" : "Vertical"}`
+    );
   };
 
   const placeShipsRandomly = (player) => {
@@ -54,17 +106,27 @@ const game = (() => {
         } catch (e) {}
       }
     });
+    dom.enablePlayButton(true);
+  };
+
+  const startGame = () => {
+    dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
+    dom.renderBoard(cpu.gameBoard.board, dom.cpuBoardElement, true);
+    dom.updateMessage("Click on the CPU board to attack!");
+    currentPlayer = player;
+    dom.enableRerollButton(false);
+    dom.enablePlayButton(false);
+    dom.enableBoardInteraction(true);
+    dom.cpuBoardElement.addEventListener("click", handleAttack);
   };
 
   const handleAttack = (e) => {
     const x = parseInt(e.target.dataset.x, 10);
     const y = parseInt(e.target.dataset.y, 10);
-
     if (cpu.gameBoard.board[x][y] === 2 || cpu.gameBoard.board[x][y] === 3) {
       dom.updateMessage("You already attacked this spot! Choose another.");
       return;
     }
-
     if (cpu.gameBoard.receiveAttack([x, y])) {
       dom.updateMessage("Hit! Attack again.");
       dom.renderBoard(cpu.gameBoard.board, dom.cpuBoardElement, true);

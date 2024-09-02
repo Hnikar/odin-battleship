@@ -4,6 +4,7 @@ const dom = (() => {
   const playButton = document.querySelector("#play-button");
   const rerollButton = document.querySelector("#reroll-button");
   const messageElement = document.querySelector("#message");
+  const rotateButton = document.querySelector("#rotate-button");
 
   const renderBoard = (board, element, hideShips = false) => {
     element.innerHTML = "";
@@ -46,6 +47,7 @@ const dom = (() => {
     cpuBoardElement,
     playButton,
     rerollButton,
+    rotateButton,
     renderBoard,
     updateMessage,
     enableRerollButton,

@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Battleship Game</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <div id="game">
+        <div id="setup-area">
+            <div id="ship-selection">
+                <div class="ship" draggable="true" data-ship-length="4">Battleship (4)</div>
+                <div class="ship" draggable="true" data-ship-length="3">Cruiser (3)</div>
+                <div class="ship" draggable="true" data-ship-length="3">Submarine (3)</div>
+                <div class="ship" draggable="true" data-ship-length="2">Destroyer (2)</div>
+                <div class="ship" draggable="true" data-ship-length="2">Patrol Boat (2)</div>
+                <div class="ship" draggable="true" data-ship-length="1">Scout (1)</div>
+            </div>
+            <button id="rotate-button">Rotate Ship</button>
+        </div>
         <div id="player-board" class="board"></div>
         <div id="cpu-board" class="board"></div>
         <div id="controls">
-            <button id="reroll-button">Reroll Ships</button>
+            <button id="reroll-button">Place randomly</button>
             <button id="play-button">Play</button>
         </div>
         <div id="message"></div>
     </div>
     <script src="main.js"></script>
 </body>
-
 </html>
