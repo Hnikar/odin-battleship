@@ -67,6 +67,7 @@ const game = (() => {
       dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
       draggedShip.remove();
       setupDragAndDrop();
+
       if (
         document
           .getElementById("ship-selection")
@@ -82,11 +83,10 @@ const game = (() => {
 
   const rotateShip = () => {
     isHorizontal = !isHorizontal;
-
-   dom.rotateShips();
-   dom.updateMessage(
-     `Ship orientation: ${isHorizontal ? "Vertical" : "Horizontal"}`
-   );
+    dom.rotateShips();
+    dom.updateMessage(
+      `Ship orientation: ${isHorizontal ? "Vertical" : "Horizontal"}`
+    );
   };
 
   const placeShipsRandomly = (player) => {

@@ -41,7 +41,7 @@ body {
 }
 
 #controls {
-    margin-top: 20px;
+    display: flex;
 }
 
 button {
@@ -61,7 +61,7 @@ button:disabled {
 }
 
 #message {
-    margin-top: 20px;
+    margin: 20px;
     font-size: 18px;
     font-weight: bold;
 }
@@ -73,10 +73,15 @@ button:disabled {
     margin-bottom: 20px;
 }
 
+#boards {
+    display: flex;
+    flex-direction: row;
+}
 #ship-selection {
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
+    height: 7.5rem;
     align-items: center;
 }
 
