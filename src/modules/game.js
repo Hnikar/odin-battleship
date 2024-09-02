@@ -82,9 +82,11 @@ const game = (() => {
 
   const rotateShip = () => {
     isHorizontal = !isHorizontal;
-    dom.updateMessage(
-      `Ship orientation: ${isHorizontal ? "Horizontal" : "Vertical"}`
-    );
+
+   dom.rotateShips();
+   dom.updateMessage(
+     `Ship orientation: ${isHorizontal ? "Vertical" : "Horizontal"}`
+   );
   };
 
   const placeShipsRandomly = (player) => {

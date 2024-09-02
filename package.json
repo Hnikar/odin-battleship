@@ -5,7 +5,7 @@
   "mode": "development",
   "scripts": {
     "test": "jest",
-    "build": "webpack",
+    "build": "webpack --mode development",
     "watch": "webpack --watch --mode development"
   },
   "jest": {

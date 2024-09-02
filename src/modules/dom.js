@@ -5,6 +5,7 @@ const dom = (() => {
   const rerollButton = document.querySelector("#reroll-button");
   const messageElement = document.querySelector("#message");
   const rotateButton = document.querySelector("#rotate-button");
+  const ships = document.querySelectorAll(".ship");
 
   const renderBoard = (board, element, hideShips = false) => {
     element.innerHTML = "";
@@ -24,6 +25,13 @@ const dom = (() => {
         element.appendChild(cellElement);
       });
     });
+  };
+
+  const rotateShips = () => {
+    for (let ship = 0; ship < ships.length; ship++) {
+      ships[ship].style.flexDirection =
+        ships[ship].style.flexDirection === "row" ? "column" : "row";
+    }
   };
 
   const updateMessage = (message) => {
@@ -53,6 +61,7 @@ const dom = (() => {
     enableRerollButton,
     enablePlayButton,
     enableBoardInteraction,
+    rotateShips,
   };
 })();
 

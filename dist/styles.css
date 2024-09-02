@@ -15,6 +15,7 @@ body {
         align-items: center;
 }
 
+
 .board {
     display: grid;
     grid-template-columns: repeat(10, 30px);
@@ -29,10 +30,6 @@ body {
     width: 30px;
     height: 30px;
     background-color: #fff;
-}
-
-.ship {
-    background-color: #4CAF50;
 }
 
 .miss {
@@ -75,10 +72,12 @@ button:disabled {
     align-items: center;
     margin-bottom: 20px;
 }
+
 #ship-selection {
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
+    align-items: center;
 }
 
 .ship {
@@ -86,8 +85,15 @@ button:disabled {
     color: white;
     cursor: move;
     user-select: none;
+    display: flex;
+        flex-direction: column;
 }
 
+.draggable-ship-cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+}
 #rotate-button {
     margin-top: 10px;
 }
