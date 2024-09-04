@@ -3,6 +3,7 @@ const dom = (() => {
   const cpuBoardElement = document.querySelector("#cpu-board");
   const playButton = document.querySelector("#play-button");
   const rerollButton = document.querySelector("#reroll-button");
+  const resetButton = document.querySelector("#reset-button");
   const messageElement = document.querySelector("#message");
   const rotateButton = document.querySelector("#rotate-button");
   const ships = document.querySelectorAll(".ship");
@@ -10,7 +11,7 @@ const dom = (() => {
   let isHorizontal = true;
 
   function renderBoard(board, element, hideShips = false) {
-    element.innerHTML = "";
+    element.innerHTML = ""; //what
     board.forEach((row, x) => {
       row.forEach((cell, y) => {
         const cellElement = document.createElement("div");
@@ -41,6 +42,10 @@ const dom = (() => {
     playButton.disabled = !enabled;
   }
 
+  function enableResetButton(enabled) {
+    resetButton.disabled = !enabled;
+  }
+
   function enableBoardInteraction(enabled) {
     cpuBoardElement.style.pointerEvents = enabled ? "auto" : "none";
   }
@@ -59,7 +64,7 @@ const dom = (() => {
       cell.addEventListener("drop", (e) => drop(e, player, Ship));
     });
 
-    rotateButton.addEventListener("click", rotateShip);
+    rotateButton.addEventListener("click", rotateShips);
   }
 
   function dragStart(e) {
@@ -88,7 +93,7 @@ const dom = (() => {
         isHorizontal ? "horizontal" : "vertical"
       );
       renderBoard(player.gameBoard.board, playerBoardElement);
-      draggedShip.remove();
+      draggedShip.style.display = "none";
       setupDragAndDrop(player, Ship);
 
       if (player.gameBoard.ships.length === 6) {
@@ -116,15 +121,23 @@ const dom = (() => {
     );
   }
 
+  function resetShips() {
+    for (let ship = 0; ship < ships.length; ship++) {
+      ships[ship].style.display = "flex";
+    }
+  }
+
   return {
     playerBoardElement,
     cpuBoardElement,
     playButton,
     rerollButton,
     rotateButton,
+    resetButton,
     renderBoard,
     updateMessage,
     enableRerollButton,
+    enableResetButton,
     enablePlayButton,
     enableBoardInteraction,
     setupDragAndDrop,
@@ -134,6 +147,7 @@ const dom = (() => {
     drop,
     rotateShips,
     hideShips,
+    resetShips,
   };
 })();
 

@@ -16,6 +16,8 @@ const game = (() => {
     dom.updateMessage("Drag and drop your ships onto the board!");
     dom.enableRerollButton(true);
     dom.enablePlayButton(false);
+    dom.enableResetButton(true);
+    dom.resetShips();
     dom.enableBoardInteraction(false);
     dom.setupDragAndDrop(player, Ship);
   }
@@ -53,6 +55,7 @@ const game = (() => {
     dom.enableRerollButton(false);
     dom.enablePlayButton(false);
     dom.enableBoardInteraction(true);
+    dom.enableResetButton(false);
     dom.cpuBoardElement.addEventListener("click", handleAttack);
   }
 
@@ -118,6 +121,7 @@ const game = (() => {
 
   function resetGame() {
     dom.playButton.addEventListener("click", startGame);
+    dom.resetButton.addEventListener("click", init);
     dom.rerollButton.addEventListener("click", () => {
       placeShipsRandomly(player);
       dom.hideShips();
