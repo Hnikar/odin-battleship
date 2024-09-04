@@ -98,11 +98,7 @@ const dom = (() => {
       draggedShip.remove();
       setupDragAndDrop(player, Ship);
 
-      if (
-        document
-          .getElementById("ship-selection")
-          .contains(document.querySelector(".ship")) === false
-      ) {
+      if (player.gameBoard.ships.length === 6) {
         enablePlayButton(true);
         updateMessage("All ships placed. Click Play when ready!");
       }
