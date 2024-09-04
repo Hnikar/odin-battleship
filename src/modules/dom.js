@@ -11,7 +11,9 @@ const dom = (() => {
   let isHorizontal = true;
 
   function renderBoard(board, element, hideShips = false) {
-    element.innerHTML = ""; //what
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
     board.forEach((row, x) => {
       row.forEach((cell, y) => {
         const cellElement = document.createElement("div");
@@ -62,6 +64,8 @@ const dom = (() => {
     cells.forEach((cell) => {
       cell.addEventListener("dragover", dragOver);
       cell.addEventListener("drop", (e) => drop(e, player, Ship));
+      cell.addEventListener("dragenter", dragEnter);
+      cell.addEventListener("dragleave", dragLeave);
     });
 
     rotateButton.addEventListener("click", rotateShips);
@@ -79,11 +83,54 @@ const dom = (() => {
     e.preventDefault();
   }
 
+  function dragEnter(e) {
+    e.preventDefault();
+    const cells = playerBoardElement.querySelectorAll(".cell");
+    e.target.classList.add("hovered");
+
+    processCells(cells, e.target, draggedShip.dataset.shipLength, isHorizontal);
+
+    function isMatchingCell(cell, target, offsetX, offsetY) {
+      return (
+        parseInt(cell.dataset.x) === parseInt(target.dataset.x) + offsetX &&
+        parseInt(cell.dataset.y) === parseInt(target.dataset.y) + offsetY
+      );
+    }
+
+    function applyHoverClass(cell, target, isHorizontal, offset) {
+      const offsetX = isHorizontal ? offset : 0;
+      const offsetY = isHorizontal ? 0 : offset;
+
+      if (isMatchingCell(cell, target, offsetX, offsetY)) {
+        cell.classList.add("hovered");
+      }
+    }
+
+    function processCells(cells, target, shipLength, isHorizontal) {
+      cells.forEach((cell) => {
+        if (cell != 0) {
+          for (let i = 1; i < shipLength; i++) {
+            applyHoverClass(cell, target, isHorizontal, i);
+          }
+        }
+      });
+    }
+  }
+
+  function dragLeave(e) {
+    e.preventDefault();
+    const cells = playerBoardElement.querySelectorAll(".cell");
+    cells.forEach((cell) => {
+      cell.classList.remove("hovered");
+    });
+  }
+
   function drop(e, player, Ship) {
     e.preventDefault();
     const x = parseInt(e.target.dataset.x, 10);
     const y = parseInt(e.target.dataset.y, 10);
     const length = parseInt(draggedShip.dataset.shipLength, 10);
+    const cells = playerBoardElement.querySelectorAll(".cell");
 
     try {
       const ship = new Ship(length);
@@ -98,9 +145,13 @@ const dom = (() => {
 
       if (player.gameBoard.ships.length === 6) {
         enablePlayButton(true);
+        rotateButton.style.visibility = "hidden";
         updateMessage("All ships placed. Click Play when ready!");
       }
     } catch (error) {
+      cells.forEach((cell) => {
+        cell.classList.remove("hovered");
+      });
       updateMessage("Can't place ship there. Try again.");
     }
   }
@@ -150,5 +201,5 @@ const dom = (() => {
     resetShips,
   };
 })();
-
+//check
 export default dom;

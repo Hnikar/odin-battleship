@@ -20,6 +20,7 @@ const game = (() => {
     dom.resetShips();
     dom.enableBoardInteraction(false);
     dom.setupDragAndDrop(player, Ship);
+    dom.rotateButton.style.visibility = "visible";
   }
 
   function placeShipsRandomly(player) {
@@ -56,6 +57,7 @@ const game = (() => {
     dom.enablePlayButton(false);
     dom.enableBoardInteraction(true);
     dom.enableResetButton(false);
+    dom.rotateButton.style.visibility = "hidden";
     dom.cpuBoardElement.addEventListener("click", handleAttack);
   }
 
@@ -120,11 +122,13 @@ const game = (() => {
   }
 
   function resetGame() {
+    //name?
     dom.playButton.addEventListener("click", startGame);
     dom.resetButton.addEventListener("click", init);
     dom.rerollButton.addEventListener("click", () => {
       placeShipsRandomly(player);
-      dom.hideShips();
+      dom.rotateButton.style.visibility = "hidden";
+      dom.hideShips(); //UNHIDE MF
       dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
     });
   }
