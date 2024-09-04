@@ -6,7 +6,7 @@ import dom from "./dom.js";
 const game = (() => {
   let player, cpu, currentPlayer;
 
-  const init = () => {
+  function init() {
     player = new Player(false, "Player");
     cpu = new Player(true);
     player.gameBoard = new Gameboard();
@@ -18,9 +18,9 @@ const game = (() => {
     dom.enablePlayButton(false);
     dom.enableBoardInteraction(false);
     dom.setupDragAndDrop(player, Ship);
-  };
+  }
 
-  const placeShipsRandomly = (player) => {
+  function placeShipsRandomly(player) {
     player.gameBoard = new Gameboard();
     const ships = [
       new Ship(4),
@@ -43,9 +43,9 @@ const game = (() => {
       }
     });
     dom.enablePlayButton(true);
-  };
+  }
 
-  const startGame = () => {
+  function startGame() {
     dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
     dom.renderBoard(cpu.gameBoard.board, dom.cpuBoardElement, true);
     dom.updateMessage("Click on the CPU board to attack!");
@@ -54,9 +54,9 @@ const game = (() => {
     dom.enablePlayButton(false);
     dom.enableBoardInteraction(true);
     dom.cpuBoardElement.addEventListener("click", handleAttack);
-  };
+  }
 
-  const handleAttack = (e) => {
+  function handleAttack(e) {
     const x = parseInt(e.target.dataset.x, 10);
     const y = parseInt(e.target.dataset.y, 10);
     if (cpu.gameBoard.board[x][y] === 2 || cpu.gameBoard.board[x][y] === 3) {
@@ -75,14 +75,14 @@ const game = (() => {
       dom.renderBoard(cpu.gameBoard.board, dom.cpuBoardElement, true);
       switchTurns();
     }
-  };
+  }
 
-  const switchTurns = () => {
+  function switchTurns() {
     dom.enableBoardInteraction(false);
     setTimeout(cpuAttack, 1000);
-  };
+  }
 
-  const cpuAttack = () => {
+  function cpuAttack() {
     let x,
       y,
       validAttack = false;
@@ -109,20 +109,21 @@ const game = (() => {
       dom.updateMessage("CPU missed! Your turn.");
       dom.enableBoardInteraction(true);
     }
-  };
+  }
 
-  const endGame = (winner) => {
+  function endGame(winner) {
     dom.updateMessage(`${winner.name} wins!`);
     dom.enableBoardInteraction(false);
-  };
+  }
 
-  const resetGame = () => {
+  function resetGame() {
     dom.playButton.addEventListener("click", startGame);
     dom.rerollButton.addEventListener("click", () => {
       placeShipsRandomly(player);
+      dom.hideShips();
       dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
     });
-  };
+  }
 
   return { init, resetGame };
 })();

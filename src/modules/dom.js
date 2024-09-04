@@ -9,7 +9,7 @@ const dom = (() => {
   let draggedShip = null;
   let isHorizontal = true;
 
-  const renderBoard = (board, element, hideShips = false) => {
+  function renderBoard(board, element, hideShips = false) {
     element.innerHTML = "";
     board.forEach((row, x) => {
       row.forEach((cell, y) => {
@@ -27,32 +27,25 @@ const dom = (() => {
         element.appendChild(cellElement);
       });
     });
-  };
+  }
 
-  const rotateShips = () => {
-    for (let ship = 0; ship < ships.length; ship++) {
-      ships[ship].style.flexDirection =
-        ships[ship].style.flexDirection === "row" ? "column" : "row";
-    }
-  };
-
-  const updateMessage = (message) => {
+  function updateMessage(message) {
     messageElement.textContent = message;
-  };
+  }
 
-  const enableRerollButton = (enabled) => {
+  function enableRerollButton(enabled) {
     rerollButton.disabled = !enabled;
-  };
+  }
 
-  const enablePlayButton = (enabled) => {
+  function enablePlayButton(enabled) {
     playButton.disabled = !enabled;
-  };
+  }
 
-  const enableBoardInteraction = (enabled) => {
+  function enableBoardInteraction(enabled) {
     cpuBoardElement.style.pointerEvents = enabled ? "auto" : "none";
-  };
+  }
 
-  const setupDragAndDrop = (player, Ship) => {
+  function setupDragAndDrop(player, Ship) {
     const ships = document.querySelectorAll(".ship");
     const cells = playerBoardElement.querySelectorAll(".cell");
 
@@ -67,21 +60,21 @@ const dom = (() => {
     });
 
     rotateButton.addEventListener("click", rotateShip);
-  };
+  }
 
-  const dragStart = (e) => {
+  function dragStart(e) {
     draggedShip = e.target;
-  };
+  }
 
-  const dragEnd = () => {
+  function dragEnd() {
     draggedShip = null;
-  };
+  }
 
-  const dragOver = (e) => {
+  function dragOver(e) {
     e.preventDefault();
-  };
+  }
 
-  const drop = (e, player, Ship) => {
+  function drop(e, player, Ship) {
     e.preventDefault();
     const x = parseInt(e.target.dataset.x, 10);
     const y = parseInt(e.target.dataset.y, 10);
@@ -105,15 +98,27 @@ const dom = (() => {
     } catch (error) {
       updateMessage("Can't place ship there. Try again.");
     }
-  };
+  }
 
-  const rotateShip = () => {
+  function hideShips() {
+    const shipSelection = document.querySelector("#ship-selection");
+    shipSelection.style.visibility = "hidden";
+  }
+
+  function rotateShips() {
+    for (let ship = 0; ship < ships.length; ship++) {
+      ships[ship].style.flexDirection =
+        ships[ship].style.flexDirection === "row" ? "column" : "row";
+    }
+  }
+  // BRUH
+  function rotateShip() {
     isHorizontal = !isHorizontal;
     rotateShips();
     updateMessage(
       `Ship orientation: ${isHorizontal ? "Vertical" : "Horizontal"}`
     );
-  };
+  }
 
   return {
     playerBoardElement,
@@ -133,6 +138,7 @@ const dom = (() => {
     dragOver,
     drop,
     rotateShip,
+    hideShips,
   };
 })();
 
