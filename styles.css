@@ -102,3 +102,6 @@ button:disabled {
 #rotate-button {
     margin-top: 10px;
 }
+.hovered {
+    border: 4px dashed #4CAF50;
+}
