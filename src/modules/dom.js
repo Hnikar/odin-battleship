@@ -106,15 +106,11 @@ const dom = (() => {
   }
 
   function rotateShips() {
+    isHorizontal = !isHorizontal;
     for (let ship = 0; ship < ships.length; ship++) {
       ships[ship].style.flexDirection =
         ships[ship].style.flexDirection === "row" ? "column" : "row";
     }
-  }
-  // BRUH
-  function rotateShip() {
-    isHorizontal = !isHorizontal;
-    rotateShips();
     updateMessage(
       `Ship orientation: ${isHorizontal ? "Vertical" : "Horizontal"}`
     );
@@ -131,13 +127,12 @@ const dom = (() => {
     enableRerollButton,
     enablePlayButton,
     enableBoardInteraction,
-    rotateShips,
     setupDragAndDrop,
     dragStart,
     dragEnd,
     dragOver,
     drop,
-    rotateShip,
+    rotateShips,
     hideShips,
   };
 })();
