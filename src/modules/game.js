@@ -5,8 +5,6 @@ import dom from "./dom.js";
 
 const game = (() => {
   let player, cpu, currentPlayer;
-  let draggedShip = null;
-  let isHorizontal = true;
 
   const init = () => {
     player = new Player(false, "Player");
@@ -19,74 +17,7 @@ const game = (() => {
     dom.enableRerollButton(true);
     dom.enablePlayButton(false);
     dom.enableBoardInteraction(false);
-    setupDragAndDrop();
-  };
-
-  const setupDragAndDrop = () => {
-    const ships = document.querySelectorAll(".ship");
-    const cells = dom.playerBoardElement.querySelectorAll(".cell");
-
-    ships.forEach((ship) => {
-      ship.addEventListener("dragstart", dragStart);
-      ship.addEventListener("dragend", dragEnd);
-    });
-
-    cells.forEach((cell) => {
-      cell.addEventListener("dragover", dragOver);
-      cell.addEventListener("drop", drop);
-    });
-
-    dom.rotateButton.addEventListener("click", rotateShip);
-  };
-
-  const dragStart = (e) => {
-    draggedShip = e.target;
-  };
-
-  const dragEnd = () => {
-    draggedShip = null;
-  };
-
-  const dragOver = (e) => {
-    e.preventDefault();
-  };
-
-  const drop = (e) => {
-    e.preventDefault();
-    const x = parseInt(e.target.dataset.x, 10);
-    const y = parseInt(e.target.dataset.y, 10);
-    const length = parseInt(draggedShip.dataset.shipLength, 10);
-
-    try {
-      const ship = new Ship(length);
-      player.gameBoard.placeShip(
-        ship,
-        [x, y],
-        isHorizontal ? "horizontal" : "vertical"
-      );
-      dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
-      draggedShip.remove();
-      setupDragAndDrop();
-
-      if (
-        document
-          .getElementById("ship-selection")
-          .contains(document.querySelector(".ship")) === false
-      ) {
-        dom.enablePlayButton(true);
-        dom.updateMessage("All ships placed. Click Play when ready!");
-      }
-    } catch (error) {
-      dom.updateMessage("Can't place ship there. Try again.");
-    }
-  };
-
-  const rotateShip = () => {
-    isHorizontal = !isHorizontal;
-    dom.rotateShips();
-    dom.updateMessage(
-      `Ship orientation: ${isHorizontal ? "Vertical" : "Horizontal"}`
-    );
+    dom.setupDragAndDrop(player, Ship);
   };
 
   const placeShipsRandomly = (player) => {
