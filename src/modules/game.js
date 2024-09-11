@@ -11,7 +11,7 @@ const game = (() => {
     cpu = new Player(true);
     player.gameBoard = new Gameboard();
     cpu.gameBoard = new Gameboard();
-    placeShipsRandomly(cpu);
+    _placeShipsRandomly(cpu);
     dom.renderBoard(player.gameBoard.board, "player");
     dom.updateMessage("Drag and drop your ships onto the board!");
     dom.enableElement("reroll", true);
@@ -22,7 +22,7 @@ const game = (() => {
     dom.setupDragAndDrop(player, Ship);
   }
 
-  function placeShipsRandomly(player) {
+  function _placeShipsRandomly(player) {
     player.gameBoard = new Gameboard();
     const ships = [
       new Ship(4),
@@ -47,17 +47,17 @@ const game = (() => {
     dom.enableElement("play", true);
   }
 
-  function startGame() {
+  function _startGame() {
     dom.renderBoard(player.gameBoard.board, "player");
     dom.renderBoard(cpu.gameBoard.board, "cpu", true);
     dom.updateMessage("Click on the CPU board to attack!");
     currentPlayer = player;
     dom.hideButtons();
     dom.enableBoardInteraction(true);
-    dom.secureAddEventListener("cpuBoard", handleAttack);
+    dom.secureAddEventListener("cpuBoard", _handleAttack);
   }
 
-  function handleAttack(e) {
+  function _handleAttack(e) {
     const x = parseInt(e.target.dataset.x, 10);
     const y = parseInt(e.target.dataset.y, 10);
     if (cpu.gameBoard.board[x][y] === 2 || cpu.gameBoard.board[x][y] === 3) {
@@ -68,22 +68,22 @@ const game = (() => {
       dom.updateMessage("Hit! Attack again.");
       dom.renderBoard(cpu.gameBoard.board, "cpu", true);
       if (cpu.gameBoard.areAllShipsSunk()) {
-        endGame(player);
+        _endGame(player);
         return;
       }
     } else {
       dom.updateMessage("Miss! CPU's turn.");
       dom.renderBoard(cpu.gameBoard.board, "cpu", true);
-      switchTurns();
+      _switchTurns();
     }
   }
 
-  function switchTurns() {
+  function _switchTurns() {
     dom.enableBoardInteraction(false);
-    setTimeout(cpuAttack, 1000);
+    setTimeout(_cpuAttack, 1000);
   }
 
-  function cpuAttack() {
+  function _cpuAttack() {
     let x,
       y,
       validAttack = false;
@@ -102,26 +102,26 @@ const game = (() => {
     if (hit) {
       dom.updateMessage("CPU hit! CPU attacks again.");
       if (player.gameBoard.areAllShipsSunk()) {
-        endGame(cpu);
+        _endGame(cpu);
         return;
       }
-      setTimeout(cpuAttack, 1000);
+      setTimeout(_cpuAttack, 1000);
     } else {
       dom.updateMessage("CPU missed! Your turn.");
       dom.enableBoardInteraction(true);
     }
   }
 
-  function endGame(winner) {
+  function _endGame(winner) {
     dom.updateMessage(`${winner.name} wins!`);
     dom.enableBoardInteraction(false);
   }
 
   function btnInit() {
-    dom.secureAddEventListener("play", startGame);
+    dom.secureAddEventListener("play", _startGame);
     dom.secureAddEventListener("reset", gameInit);
     dom.secureAddEventListener("reroll", () => {
-      placeShipsRandomly(player);
+      _placeShipsRandomly(player);
       dom.renderBoard(player.gameBoard.board, "player");
     });
   }

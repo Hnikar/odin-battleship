@@ -45,7 +45,7 @@ const dom = (() => {
     cpuBoardElement.style.pointerEvents = enabled ? "auto" : "none";
   }
 
-  function buttonReferenceCheck(element) {
+  function _buttonReferenceCheck(element) {
     if (element === "play") return playButton;
     else if (element === "reset") return resetButton;
     else if (element === "reroll") return rerollButton;
@@ -54,7 +54,7 @@ const dom = (() => {
   }
 
   function enableElement(element, enabled) {
-    element = buttonReferenceCheck(element);
+    element = _buttonReferenceCheck(element);
     element.disabled = !enabled;
   }
 
@@ -63,67 +63,72 @@ const dom = (() => {
     const cells = playerBoardElement.querySelectorAll(".cell");
 
     ships.forEach((ship) => {
-      ship.addEventListener("dragstart", dragStart);
-      ship.addEventListener("dragend", dragEnd);
+      ship.addEventListener("dragstart", _dragStart);
+      ship.addEventListener("dragend", _dragEnd);
     });
 
     cells.forEach((cell) => {
-      cell.addEventListener("dragover", dragOver);
-      cell.addEventListener("drop", (e) => drop(e, player, Ship));
-      cell.addEventListener("dragenter", dragEnter);
-      cell.addEventListener("dragleave", dragLeave);
+      cell.addEventListener("dragover", _dragOver);
+      cell.addEventListener("drop", (e) => _drop(e, player, Ship));
+      cell.addEventListener("dragenter", _dragEnter);
+      cell.addEventListener("dragleave", _dragLeave);
     });
 
-    rotateButton.addEventListener("click", rotateShips);
+    rotateButton.addEventListener("click", _rotateShips);
   }
 
-  function dragStart(e) {
+  function _dragStart(e) {
     draggedShip = e.target;
   }
 
-  function dragEnd() {
+  function _dragEnd() {
     draggedShip = null;
   }
 
-  function dragOver(e) {
+  function _dragOver(e) {
     e.preventDefault();
   }
 
-  function dragEnter(e) {
+  function _dragEnter(e) {
     e.preventDefault();
     const cells = playerBoardElement.querySelectorAll(".cell");
     e.target.classList.add("hovered");
 
-    processCells(cells, e.target, draggedShip.dataset.shipLength, isHorizontal);
+    _processCells(
+      cells,
+      e.target,
+      draggedShip.dataset.shipLength,
+      isHorizontal
+    );
 
-    function isMatchingCell(cell, target, offsetX, offsetY) {
+    function _isMatchingCell(cell, target, offsetX, offsetY) {
       return (
         parseInt(cell.dataset.x) === parseInt(target.dataset.x) + offsetX &&
         parseInt(cell.dataset.y) === parseInt(target.dataset.y) + offsetY
       );
     }
 
-    function applyHoverClass(cell, target, isHorizontal, offset) {
+    function _applyHoverClass(cell, target, isHorizontal, offset) {
       const offsetX = isHorizontal ? offset : 0;
       const offsetY = isHorizontal ? 0 : offset;
 
-      if (isMatchingCell(cell, target, offsetX, offsetY)) {
+      if (_isMatchingCell(cell, target, offsetX, offsetY)) {
         cell.classList.add("hovered");
       }
     }
 
-    function processCells(cells, target, shipLength, isHorizontal) {
+    function _processCells(cells, target, shipLength, isHorizontal) {
       cells.forEach((cell) => {
         if (cell != 0) {
           for (let i = 1; i < shipLength; i++) {
-            applyHoverClass(cell, target, isHorizontal, i);
+            _applyHoverClass(cell, target, isHorizontal, i);
           }
         }
       });
     }
   }
 
-  function dragLeave(e) {
+  function _dragLeave(e) {
     e.preventDefault();
     const cells = playerBoardElement.querySelectorAll(".cell");
     cells.forEach((cell) => {
@@ -131,7 +136,7 @@ const dom = (() => {
     });
   }
 
-  function drop(e, player, Ship) {
+  function _drop(e, player, Ship) {
     e.preventDefault();
     const x = parseInt(e.target.dataset.x, 10);
     const y = parseInt(e.target.dataset.y, 10);
@@ -162,12 +167,12 @@ const dom = (() => {
     }
   }
 
-  function setShipsVisibiliy(enabled) {
+  function _setShipsVisibiliy(enabled) {
     const shipSelection = document.querySelector("#ship-selection");
     shipSelection.style.visibility = enabled ? "visible" : "hidden";
   }
 
-  function rotateShips() {
+  function _rotateShips() {
     isHorizontal = !isHorizontal;
     for (let ship = 0; ship < ships.length; ship++) {
       ships[ship].style.flexDirection =
@@ -179,8 +184,8 @@ const dom = (() => {
   }
 
   function resetShips() {
-    setRotateButtonVisibility(true);
-    setShipsVisibiliy(true);
+    _setRotateButtonVisibility(true);
+    _setShipsVisibiliy(true);
     for (let ship = 0; ship < ships.length; ship++) {
       ships[ship].style.display = "flex";
     }
@@ -188,17 +193,17 @@ const dom = (() => {
 
   function secureAddEventListener(element, event) {
     if (element === "cpuBoard") element = cpuBoardElement;
-    else element = buttonReferenceCheck(element);
+    else element = _buttonReferenceCheck(element);
     element.addEventListener("click", () => {
       if (element === rerollButton) {
-        setRotateButtonVisibility(false);
-        setShipsVisibiliy(false);
+        _setRotateButtonVisibility(false);
+        _setShipsVisibiliy(false);
       }
       event();
     });
   }
 
-  function setRotateButtonVisibility(visibility) {
+  function _setRotateButtonVisibility(visibility) {
     if (visibility) rotateButton.style.visibility = "visible";
     else rotateButton.style.visibility = "hidden";
   }
@@ -207,7 +212,7 @@ const dom = (() => {
     enableElement("reroll", false);
     enableElement("play", false);
     enableElement("reset", false);
-    setRotateButtonVisibility(false);
+    _setRotateButtonVisibility(false);
   }
 
   return {
