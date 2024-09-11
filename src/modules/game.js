@@ -58,6 +58,7 @@ const game = (() => {
   }
 
   function _handleAttack(e) {
+    // WHY NO WORK
     const x = parseInt(e.target.dataset.x, 10);
     const y = parseInt(e.target.dataset.y, 10);
     if (cpu.gameBoard.board[x][y] === 2 || cpu.gameBoard.board[x][y] === 3) {

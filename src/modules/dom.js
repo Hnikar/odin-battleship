@@ -194,13 +194,14 @@ const dom = (() => {
   function secureAddEventListener(element, event) {
     if (element === "cpuBoard") element = cpuBoardElement;
     else element = _buttonReferenceCheck(element);
-    element.addEventListener("click", () => {
-      if (element === rerollButton) {
+    if (element === rerollButton) {
+      element.addEventListener("click", () => {
         _setRotateButtonVisibility(false);
         _setShipsVisibiliy(false);
-      }
-      event();
-    });
+      });
+    }
+    element.addEventListener("click", event);
+    
   }
 
   function _setRotateButtonVisibility(visibility) {
