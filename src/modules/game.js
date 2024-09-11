@@ -20,7 +20,6 @@ const game = (() => {
     dom.resetShips();
     dom.enableBoardInteraction(false);
     dom.setupDragAndDrop(player, Ship);
-    dom.setRotateButtonVisibility(true);
   }
 
   function placeShipsRandomly(player) {
@@ -53,11 +52,8 @@ const game = (() => {
     dom.renderBoard(cpu.gameBoard.board, "cpu", true);
     dom.updateMessage("Click on the CPU board to attack!");
     currentPlayer = player;
-    dom.enableElement("reroll", false);
-    dom.enableElement("play", false);
-    dom.enableElement("reset", false);
+    dom.hideButtons();
     dom.enableBoardInteraction(true);
-    dom.setRotateButtonVisibility(false);
     dom.secureAddEventListener("cpuBoard", handleAttack);
   }
 

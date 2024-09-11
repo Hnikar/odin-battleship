@@ -164,8 +164,7 @@ const dom = (() => {
 
   function setShipsVisibiliy(enabled) {
     const shipSelection = document.querySelector("#ship-selection");
-    if (enabled) shipSelection.style.visibility = "visible";
-    else shipSelection.style.visibility = "hidden";
+    shipSelection.style.visibility = enabled ? "visible" : "hidden";
   }
 
   function rotateShips() {
@@ -180,6 +179,7 @@ const dom = (() => {
   }
 
   function resetShips() {
+    setRotateButtonVisibility(true);
     setShipsVisibiliy(true);
     for (let ship = 0; ship < ships.length; ship++) {
       ships[ship].style.display = "flex";
@@ -191,10 +191,8 @@ const dom = (() => {
     else element = buttonReferenceCheck(element);
     element.addEventListener("click", () => {
       if (element === rerollButton) {
-        element.addEventListener("click", () => {
-          setRotateButtonVisibility(false);
-          setShipsVisibiliy(false); //fix
-        });
+        setRotateButtonVisibility(false);
+        setShipsVisibiliy(false);
       }
       event();
     });
@@ -205,15 +203,22 @@ const dom = (() => {
     else rotateButton.style.visibility = "hidden";
   }
 
+  function hideButtons() {
+    enableElement("reroll", false);
+    enableElement("play", false);
+    enableElement("reset", false);
+    setRotateButtonVisibility(false);
+  }
+
   return {
     renderBoard,
     updateMessage,
+    hideButtons,
     enableElement,
     enableBoardInteraction,
     setupDragAndDrop,
     resetShips,
     secureAddEventListener,
-    setRotateButtonVisibility,
   };
 })();
 export default dom;
