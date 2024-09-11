@@ -10,7 +10,12 @@ const dom = (() => {
   let draggedShip = null;
   let isHorizontal = true;
 
-  function renderBoard(board, element, hideShips = false) {
+  function renderBoard(board, player, hideShips = false) {
+    let element;
+    if (player === "player") element = playerBoardElement;
+    else if (player === "cpu") element = cpuBoardElement;
+    else throw new Error("Render error. Invalid board element");
+
     while (element.firstChild) {
       element.removeChild(element.firstChild);
     }
@@ -36,20 +41,21 @@ const dom = (() => {
     messageElement.textContent = message;
   }
 
-  function enableRerollButton(enabled) {
-    rerollButton.disabled = !enabled;
-  }
-
-  function enablePlayButton(enabled) {
-    playButton.disabled = !enabled;
-  }
-
-  function enableResetButton(enabled) {
-    resetButton.disabled = !enabled;
-  }
-
   function enableBoardInteraction(enabled) {
     cpuBoardElement.style.pointerEvents = enabled ? "auto" : "none";
+  }
+
+  function buttonReferenceCheck(element) {
+    if (element === "play") return playButton;
+    else if (element === "reset") return resetButton;
+    else if (element === "reroll") return rerollButton;
+    else
+      throw new Error("Finding element name reference. Invalid element name");
+  }
+
+  function enableElement(element, enabled) {
+    element = buttonReferenceCheck(element);
+    element.disabled = !enabled;
   }
 
   function setupDragAndDrop(player, Ship) {
@@ -139,12 +145,12 @@ const dom = (() => {
         [x, y],
         isHorizontal ? "horizontal" : "vertical"
       );
-      renderBoard(player.gameBoard.board, playerBoardElement);
+      renderBoard(player.gameBoard.board, "player");
       draggedShip.style.display = "none";
       setupDragAndDrop(player, Ship);
 
       if (player.gameBoard.ships.length === 6) {
-        enablePlayButton(true);
+        enableElement("play", true);
         rotateButton.style.visibility = "hidden";
         updateMessage("All ships placed. Click Play when ready!");
       }
@@ -178,28 +184,35 @@ const dom = (() => {
     }
   }
 
+  function secureAddEventListener(element, event) {
+    if (element === "cpuBoard") element = cpuBoardElement;
+    else element = buttonReferenceCheck(element);
+    element.addEventListener("click", () => {
+      if (element === rerollButton) {
+        element.addEventListener("click", () => {
+          setRotateButtonVisibility("false");
+          hideShips(); //UNHIDE MF
+        });
+      }
+      event();
+    });
+  }
+
+  function setRotateButtonVisibility(visibility) {
+    if (visibility) rotateButton.style.visibility = "visible";
+    else rotateButton.style.visibility = "hidden";
+  }
+
   return {
-    playerBoardElement,
-    cpuBoardElement,
-    playButton,
-    rerollButton,
-    rotateButton,
-    resetButton,
     renderBoard,
     updateMessage,
-    enableRerollButton,
-    enableResetButton,
-    enablePlayButton,
+    enableElement,
     enableBoardInteraction,
     setupDragAndDrop,
-    dragStart,
-    dragEnd,
-    dragOver,
-    drop,
-    rotateShips,
     hideShips,
     resetShips,
+    secureAddEventListener,
+    setRotateButtonVisibility,
   };
 })();
-//check
 export default dom;

@@ -6,21 +6,21 @@ import dom from "./dom.js";
 const game = (() => {
   let player, cpu, currentPlayer;
 
-  function init() {
+  function gameInit() {
     player = new Player(false, "Player");
     cpu = new Player(true);
     player.gameBoard = new Gameboard();
     cpu.gameBoard = new Gameboard();
     placeShipsRandomly(cpu);
-    dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
+    dom.renderBoard(player.gameBoard.board, "player");
     dom.updateMessage("Drag and drop your ships onto the board!");
-    dom.enableRerollButton(true);
-    dom.enablePlayButton(false);
-    dom.enableResetButton(true);
+    dom.enableElement("reroll", true);
+    dom.enableElement("play", false);
+    dom.enableElement("reset", true);
     dom.resetShips();
     dom.enableBoardInteraction(false);
     dom.setupDragAndDrop(player, Ship);
-    dom.rotateButton.style.visibility = "visible";
+    dom.setRotateButtonVisibility(true);
   }
 
   function placeShipsRandomly(player) {
@@ -45,20 +45,20 @@ const game = (() => {
         } catch (e) {}
       }
     });
-    dom.enablePlayButton(true);
+    dom.enableElement("play", true);
   }
 
   function startGame() {
-    dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
-    dom.renderBoard(cpu.gameBoard.board, dom.cpuBoardElement, true);
+    dom.renderBoard(player.gameBoard.board, "player");
+    dom.renderBoard(cpu.gameBoard.board, "cpu", true);
     dom.updateMessage("Click on the CPU board to attack!");
     currentPlayer = player;
-    dom.enableRerollButton(false);
-    dom.enablePlayButton(false);
+    dom.enableElement("reroll", false);
+    dom.enableElement("play", false);
+    dom.enableElement("reset", false);
     dom.enableBoardInteraction(true);
-    dom.enableResetButton(false);
-    dom.rotateButton.style.visibility = "hidden";
-    dom.cpuBoardElement.addEventListener("click", handleAttack);
+    dom.setRotateButtonVisibility(false);
+    dom.secureAddEventListener("cpuBoard", handleAttack);
   }
 
   function handleAttack(e) {
@@ -70,14 +70,14 @@ const game = (() => {
     }
     if (cpu.gameBoard.receiveAttack([x, y])) {
       dom.updateMessage("Hit! Attack again.");
-      dom.renderBoard(cpu.gameBoard.board, dom.cpuBoardElement, true);
+      dom.renderBoard(cpu.gameBoard.board, "cpu", true);
       if (cpu.gameBoard.areAllShipsSunk()) {
         endGame(player);
         return;
       }
     } else {
       dom.updateMessage("Miss! CPU's turn.");
-      dom.renderBoard(cpu.gameBoard.board, dom.cpuBoardElement, true);
+      dom.renderBoard(cpu.gameBoard.board, "cpu", true);
       switchTurns();
     }
   }
@@ -102,7 +102,7 @@ const game = (() => {
       }
     }
     const hit = player.gameBoard.receiveAttack([x, y]);
-    dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
+    dom.renderBoard(player.gameBoard.board, "player");
     if (hit) {
       dom.updateMessage("CPU hit! CPU attacks again.");
       if (player.gameBoard.areAllShipsSunk()) {
@@ -121,19 +121,16 @@ const game = (() => {
     dom.enableBoardInteraction(false);
   }
 
-  function resetGame() {
-    //name?
-    dom.playButton.addEventListener("click", startGame);
-    dom.resetButton.addEventListener("click", init);
-    dom.rerollButton.addEventListener("click", () => {
+  function btnInit() {
+    dom.secureAddEventListener("play", startGame);
+    dom.secureAddEventListener("reset", gameInit);
+    dom.secureAddEventListener("reroll", () => {
       placeShipsRandomly(player);
-      dom.rotateButton.style.visibility = "hidden";
-      dom.hideShips(); //UNHIDE MF
-      dom.renderBoard(player.gameBoard.board, dom.playerBoardElement);
+      dom.renderBoard(player.gameBoard.board, "player");
     });
   }
 
-  return { init, resetGame };
+  return { gameInit, btnInit };
 })();
 
 export default game;
