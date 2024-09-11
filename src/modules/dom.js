@@ -162,9 +162,10 @@ const dom = (() => {
     }
   }
 
-  function hideShips() {
+  function setShipsVisibiliy(enabled) {
     const shipSelection = document.querySelector("#ship-selection");
-    shipSelection.style.visibility = "hidden";
+    if (enabled) shipSelection.style.visibility = "visible";
+    else shipSelection.style.visibility = "hidden";
   }
 
   function rotateShips() {
@@ -179,6 +180,7 @@ const dom = (() => {
   }
 
   function resetShips() {
+    setShipsVisibiliy(true);
     for (let ship = 0; ship < ships.length; ship++) {
       ships[ship].style.display = "flex";
     }
@@ -190,8 +192,8 @@ const dom = (() => {
     element.addEventListener("click", () => {
       if (element === rerollButton) {
         element.addEventListener("click", () => {
-          setRotateButtonVisibility("false");
-          hideShips(); //UNHIDE MF
+          setRotateButtonVisibility(false);
+          setShipsVisibiliy(false); //fix
         });
       }
       event();
@@ -209,7 +211,6 @@ const dom = (() => {
     enableElement,
     enableBoardInteraction,
     setupDragAndDrop,
-    hideShips,
     resetShips,
     secureAddEventListener,
     setRotateButtonVisibility,
