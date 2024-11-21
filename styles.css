@@ -1,12 +1,30 @@
+:root {
+    --background-color: #f0f0f0;
+    --board-background: #ccc;
+    --cell-background: #fff;
+    --miss-color: #2196F3;
+    --hit-color: #F44336;
+    --button-background: #4CAF50;
+    --button-color: white;
+    --disabled-button-background: #ccc;
+    --text-color: #212121;
+    --secondary-text-color: #757575;
+    --end-screen-background: rgba(0, 0, 0, 0.5);
+    --end-screen-content-background: #ffffff;
+    --try-again-button-background: #2196F3;
+    --try-again-button-hover: #1976D2;
+    --try-again-button-active: #1565C0;
+}
 @import url(reset.css);
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
-        justify-content: center;
+    justify-content: center;
         align-items: center;
         height: 100svh;
         margin: 0;
-        background-color: #f0f0f0;
+    background-color: var(--background-color);
     }
     
     #game {
@@ -15,13 +33,12 @@ body {
         align-items: center;
 }
 
-
 .board {
     display: grid;
     grid-template-columns: repeat(10, 30px);
     grid-template-rows: repeat(10, 30px);
     gap: 1px;
-        background-color: #ccc;
+    background-color: var(--board-background);
         padding: 10px;
     margin-bottom: 20px;
 }
@@ -29,15 +46,15 @@ body {
 .cell {
     width: 30px;
     height: 30px;
-    background-color: #fff;
+    background-color: var(--cell-background);
 }
 
 .miss {
-    background-color: #2196F3;
+    background-color: var(--miss-color);
 }
 
 .hit {
-    background-color: #F44336;
+    background-color: var(--hit-color);
 }
 
 #controls {
@@ -48,15 +65,15 @@ button {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--button-background);
+        color: var(--button-color);
     border: none;
     border-radius: 5px;
     margin: 0 10px;
 }
 
 button:disabled {
-    background-color: #ccc;
+    background-color: var(--disabled-button-background);
     cursor: not-allowed;
 }
 
@@ -77,6 +94,7 @@ button:disabled {
     display: flex;
     flex-direction: row;
 }
+
 #ship-selection {
     display: flex;
     gap: 10px;
@@ -86,22 +104,124 @@ button:disabled {
 }
 
 .ship {
-    background-color: #4CAF50;
-    color: white;
+    background-color: var(--button-background);
+        color: var(--button-color);
     cursor: move;
     user-select: none;
     display: flex;
-        flex-direction: column;
+    flex-direction: column;
 }
 
 .draggable-ship-cell {
     width: 30px;
     height: 30px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--board-background);
 }
+
 #rotate-button {
     margin-top: 10px;
 }
+
 .hovered {
-    border: 4px dashed #4CAF50;
+    border: 4px dashed var(--button-background);
+    }
+    
+    #end-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--end-screen-background);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+    
+    #end-screen.visible {
+        opacity: 1;
+    }
+    
+    .end-screen-content {
+        background-color: var(--end-screen-content-background);
+        border-radius: 4px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        transform: translateY(20px);
+        transition: transform 0.3s ease-in-out;
+        max-width: 90%;
+        width: 400px;
+    }
+    
+    #end-screen.visible .end-screen-content {
+        transform: translateY(0);
+    }
+    
+    #winner-text {
+        font-family: 'Roboto', sans-serif;
+        font-size: 2rem;
+        color: var(--text-color);
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+    
+    #stats-container {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .stat-label {
+        font-family: 'Roboto', sans-serif;
+        font-size: 0.9rem;
+        color: var(--secondary-text-color);
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+    }
+    
+    .stat-value {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.5rem;
+        color: var(--text-color);
+        font-weight: 500;
+    }
+    
+    #try-again-button {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1rem;
+        padding: 0.8rem 1.5rem;
+        background-color: var(--try-again-button-background);
+        color: var(--button-color);
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        text-transform: uppercase;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.24);
+    }
+    
+    #try-again-button:hover {
+        background-color: var(--try-again-button-hover);
+        box-shadow: 0 4px 8px rgba(33, 150, 243, 0.32);
+    }
+    
+    #try-again-button:active {
+        background-color: var(--try-again-button-active);
+        box-shadow: 0 1px 2px rgba(33, 150, 243, 0.16);
+    }
+    
+    .hidden {
+        display: none;
 }
