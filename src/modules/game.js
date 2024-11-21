@@ -6,6 +6,7 @@ import dom from "./dom.js";
 const game = (() => {
   let player, cpu, currentPlayer;
 
+
   function gameInit() {
     player = new Player(false, "Player");
     cpu = new Player(true);
@@ -20,7 +21,9 @@ const game = (() => {
     dom.resetShips();
     dom.enableBoardInteraction(false);
     dom.setupDragAndDrop(player, Ship);
+    dom.toggleEndScreen();
   }
+
 
   function _placeShipsRandomly(player) {
     player.gameBoard = new Gameboard();
@@ -58,7 +61,6 @@ const game = (() => {
   }
 
   function _handleAttack(e) {
-    // WHY NO WORK
     const x = parseInt(e.target.dataset.x, 10);
     const y = parseInt(e.target.dataset.y, 10);
     if (cpu.gameBoard.board[x][y] === 2 || cpu.gameBoard.board[x][y] === 3) {
@@ -116,6 +118,18 @@ const game = (() => {
   function _endGame(winner) {
     dom.updateMessage(`${winner.name} wins!`);
     dom.enableBoardInteraction(false);
+    const stats = _calculateStats(winner);
+    dom.toggleEndScreen(winner.name, stats, true);
+  }
+
+  function _calculateStats(winner) {
+    const loser = winner === player ? cpu : player;
+    const hits = loser.gameBoard.board.flat().filter(cell => cell === 3).length;
+    const misses = loser.gameBoard.board.flat().filter(cell => cell === 2).length;
+    const totalShots = hits + misses;
+    const accuracy = totalShots > 0 ? ((hits / totalShots) * 100).toFixed(1) : 0;
+
+    return { hits, misses, accuracy };
   }
 
   function btnInit() {
@@ -125,9 +139,12 @@ const game = (() => {
       _placeShipsRandomly(player);
       dom.renderBoard(player.gameBoard.board, "player");
     });
+    dom.secureAddEventListener("tryAgain", gameInit);
   }
 
   return { gameInit, btnInit };
 })();
 
 export default game;
+
+//better styling

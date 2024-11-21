@@ -10,6 +10,34 @@ const dom = (() => {
   let draggedShip = null;
   let isHorizontal = true;
 
+  const endScreen = document.querySelector("#end-screen");
+  const winnerText = document.querySelector("#winner-text");
+  const hitsCount = document.querySelector("#hits-count");
+  const missesCount = document.querySelector("#misses-count");
+  const accuracyDisplay = document.querySelector("#accuracy");
+  const tryAgainButton = document.querySelector("#try-again-button");
+
+  function toggleEndScreen(winnerName, stats, show) {
+    if (show) {
+      winnerText.textContent = `${winnerName} Wins!`;
+      hitsCount.textContent = stats.hits;
+      missesCount.textContent = stats.misses;
+      accuracyDisplay.textContent = `${stats.accuracy}%`;
+
+      endScreen.classList.remove("hidden");
+      setTimeout(() => {
+        endScreen.style.pointerEvents = "auto";
+        endScreen.classList.add("visible");
+      }, 50);
+    } else {
+      endScreen.classList.remove("visible");
+      setTimeout(() => {
+        endScreen.style.pointerEvents = "none";
+        endScreen.classList.add("hidden");
+      }, 50);
+    }
+  }
+
   function renderBoard(board, player, hideShips = false) {
     let element;
     if (player === "player") element = playerBoardElement;
@@ -37,6 +65,12 @@ const dom = (() => {
     });
   }
 
+  function unrenderCPUBoard() {
+    while (cpuBoardElement.firstChild) {
+      cpuBoardElement.removeChild(cpuBoardElement.firstChild);
+    }
+  }
+
   function updateMessage(message) {
     messageElement.textContent = message;
   }
@@ -46,11 +80,18 @@ const dom = (() => {
   }
 
   function _buttonReferenceCheck(element) {
-    if (element === "play") return playButton;
-    else if (element === "reset") return resetButton;
-    else if (element === "reroll") return rerollButton;
-    else
-      throw new Error("Finding element name reference. Invalid element name");
+    switch (element) {
+      case "play":
+        return playButton;
+      case "reset":
+        return resetButton;
+      case "reroll":
+        return rerollButton;
+      case "tryAgain":
+        return tryAgainButton;
+      default:
+        throw new Error("Finding element name reference. Invalid element name");
+    }
   }
 
   function enableElement(element, enabled) {
@@ -199,9 +240,12 @@ const dom = (() => {
         _setRotateButtonVisibility(false);
         _setShipsVisibiliy(false);
       });
+    } else if (element === tryAgainButton) {
+      element.addEventListener("click", () => {
+        unrenderCPUBoard();
+      });
     }
     element.addEventListener("click", event);
-    
   }
 
   function _setRotateButtonVisibility(visibility) {
@@ -225,6 +269,7 @@ const dom = (() => {
     setupDragAndDrop,
     resetShips,
     secureAddEventListener,
+    toggleEndScreen,
   };
 })();
 export default dom;
