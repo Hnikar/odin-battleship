@@ -146,5 +146,3 @@ const game = (() => {
 })();
 
 export default game;
-
-//better styling
